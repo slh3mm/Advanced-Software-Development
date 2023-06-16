@@ -1,6 +1,6 @@
-# Django Project Group B-13
+# Advanced-Software-Development (UVA CS 3240)
 
-__Names:__ Adarsh Mohanraju, Spencer Hernandez, Cameron Greene, Joel Valliath, Ethan Ogilvie
+Analyzes modern software engineering practice for multi-person projects; methods for requirements specification, design, implementation, verification, and maintenance of large software systems; advanced software development techniques and large project management approaches; project planning, scheduling, resource management, accounting, configuration control, and documentation.
 
-__Computing IDs:__ hmz4kf, slh3mm, crg2kvm, jdv7dyw, ebo4dq
+This repository contains the contents of a semester-long project that was built using the Django Framework. The project is a deployable website that allows students to build a schedule of their choosing from a database of UVA classes, which they can then submit to their advisor for approval/rejection.
 
