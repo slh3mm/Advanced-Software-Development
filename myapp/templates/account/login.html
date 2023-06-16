@@ -1,0 +1,139 @@
+<title>Login</title>
+{% extends 'account/base.html' %}
+
+{% block content %}
+
+{% load static%}
+
+<link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap" rel="stylesheet">
+<link rel="icon" href="{% static 'myapp/University_of_Virginia_Rotunda_logo.svg' %}">
+
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{%comment%}
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{%endcomment%}
+
+<header>
+  <nav id = "wholeNavBar" class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a href="/"><img id = "rontundaImage" class = "image" src ="https://upload.wikimedia.org/wikipedia/commons/d/dd/University_of_Virginia_Rotunda_logo.svg"></a>
+
+        <a id="navLogo" class="navbar-brand" style = "font-family: Montserrat;
+        color: black; font-size: 30px; padding-left: 5px;" href="/accounts/profile">Schedule Advisor</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="offcanvasNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex = "-1" id="navbarSupportedContent" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header" style = "text-align: center">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Navigation Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class = "offcanvas-body"> 
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          </div>
+          </ul>
+        </div>
+      </div>
+    </nav>
+</header>
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap">
+  <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+  <style>
+    *{
+      font-weight: bolder !important;
+      font-family: 'Montserrat';
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/montserrat/v25/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCvr6Hw3aXpsog.woff2) format('woff2');
+    }
+    .alert-messages {
+      font-weight: bolder !important;
+    }
+  </style>
+</head>
+<body class="banner">
+  <div id="splashPageText">
+    <div id="innerSplashPageBoxLogInScreen" style = "background-color: white;">
+      
+        <div class = "title" style = "text-align: center;font-size: 35px; font-family: 'Montserrat';"> Login </div>
+        <!-- <h1 class = "signInAndUpTextOnLoginAndSignUpPages">{% trans "Sign In" %}</h1> -->
+        <br>
+        {% get_providers as socialaccount_providers %}
+
+        {% if socialaccount_providers %}
+        <div class = "container">
+          
+          <div style = "border: 2px solid black; text-align: center;">
+            <div style="margin: 15px 15px 15px 15px;">
+              <h2 style = "font-family: 'Montserrat';font-size: 25px;">Login Setup</h2>
+              <center>
+              <h4 style = "font-family: 'Montserrat'; font-size: 20px; font-weight: bold;"> If you don't have an account</h4>
+              <button class = "btn btn-dark btn-lg"> <a style = "text-decoration: none; color: inherit; font-family: 'Montserrat';" href="{{ signup_url }}">Sign Up</a></button>
+            </center>
+            </div>
+          </div>
+          <div style = "border: 2px solid black; margin-top: 50px; text-align: center;">
+            <div style="margin: 15px 15px 15px 15px;">
+              <h3 style = "font-family: 'Montserrat'; font-size: 29px; margin-bottom: 15px;">Student/Advisor Login</h3>
+              {%comment%}
+              <h4 style = "font-family: Montserrat; font-size: 20px; font-weight: bold;"> If you don't have an account</h4>
+              <button class = "btn btn-dark btn-lg"> <a style = "text-decoration: none; color: inherit;color: white; font-weight: bold;" href="/accounts/createAdmin">Sign Up</a></button>
+              <br>
+              <br>
+              <h4 style = "font-family: Montserrat;font-size: 20px; font-weight: bold;"> Or, login with Credentials</h4>
+              {%endcomment%}
+              <h4 style = "font-family: Montserrat;font-size: 20px; font-weight: bold;"> Login with Credentials (Advisor)</h4>
+                <form class="login" method="POST" style = "width: 100%;
+                margin-bottom: 10px;
+                padding: 10px;
+                background: #ffffff;
+                outline: none;"{% url 'account_login' %}>
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  {% if redirect_field_value %}
+                  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                  {% endif %}
+                  <a class="button secondaryAction" href = {% url 'account_reset_password' %} > {% trans "Forgot Password?" %}</a>
+                  <br>
+                  <br>
+                  <button class="btn btn-dark btn-lg" id="fetch-api-data" type="submit" style = "text-decoration: none; color: inherit;color: white; font-weight: bold;">{% trans "Log In" %}</button>
+                  
+                </form>
+                {% block scripts %}
+                <script>
+                  document.getElementById('fetch-api-data').addEventListener('click', () => {
+                    fetch('/fetch_api_data/')
+                  });
+                </script>
+                {% endblock %}
+                <br>
+                <h4 style = "font-family: Montserrat;font-size: 20px; font-weight: bold;"> Login with Google (Student)</h4>
+                <button class = "btn btn-dark btn-lg"> <a style = "text-decoration: none; color: inherit;color: white; font-weight: bold;" href="/accounts/google/login/?process=login">Google</a></button>
+
+                {% else %}
+                <p>{% blocktrans %}If you have not created an account yet, then please
+                <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+                {% endif %}
+            </div>
+          </div>
+
+        </div>
+
+    </div>
+  </div>
+</body>
+{% endblock %}

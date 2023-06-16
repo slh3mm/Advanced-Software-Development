@@ -1,0 +1,87 @@
+<title>Welcome!</title>
+{% load static%}
+
+<link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap" rel="stylesheet">
+<link rel="icon" href="{% static 'myapp/University_of_Virginia_Rotunda_logo.svg' %}">
+
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+
+<header>
+  <nav id = "wholeNavBar" class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a href="/"><img id = "rontundaImage" class = "image" src ="https://upload.wikimedia.org/wikipedia/commons/d/dd/University_of_Virginia_Rotunda_logo.svg"></a>
+
+        <a id="navLogo" class="navbar-brand" style = "font-family: Montserrat;
+        color: black; font-size: 30px; padding-left: 5px;" href="/accounts/profile">Schedule Advisor</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="offcanvasNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex = "-1" id="navbarSupportedContent" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header" style = "text-align: center">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel" style = "font-family: Merriweather;">Navigation Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class = "offcanvas-body"> 
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          </div>
+                <!--
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+            </li>
+            -->
+          </ul>
+        </div>
+      </div>
+    </nav>
+</header>
+{% bootstrap_messages %}
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap">
+  <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+  <style>
+    button{
+      font-weight: bolder !important;
+      font-family: 'Montserrat';
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/montserrat/v25/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCvr6Hw3aXpsog.woff2) format('woff2');
+    }
+    .alert-messages {
+      font-weight: bolder !important;
+    }
+  </style>
+</head>
+<body class="banner">
+ <div id="splashPageText">
+    <div id="innerSplashPageBox">
+      <h1 id ="splashHeaderText">Welcome!</h1>
+      <form action="/accounts/login/">
+        <button id = "splashPageButton" class ="btn btn-primary">Log In</button>
+      </form>
+    </div>
+ </div>
+</body>
+
+
+
+
+
+
+
+
+<!--
+
+    <h1>Welcome to Our Website!</h1>
+	<h3><a href="/accounts/login/">Go to Login Page!</a></h3>
+-->
+
+
+  {% endblock %}

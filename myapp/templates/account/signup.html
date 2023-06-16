@@ -1,0 +1,87 @@
+<title>Sign Up</title>
+{%comment%}
+{% extends "account/base.html" %}
+{%endcomment%}
+{% block content %}
+
+{% load static%}
+
+<link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap" rel="stylesheet">
+<link rel="icon" href="{% static 'myapp/University_of_Virginia_Rotunda_logo.svg' %}">
+
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% load i18n %}
+
+{%comment%}
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+{%endcomment%}
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap">
+  <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+  <style>
+    *{
+      font-weight: bolder !important;
+      font-family: 'Montserrat';
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/montserrat/v25/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCvr6Hw3aXpsog.woff2) format('woff2');
+    }
+    .alert-messages {
+      font-weight: bolder !important;
+    }
+  </style>
+</head>
+<header>
+  <nav id = "wholeNavBar" class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a href="/"><img id = "rontundaImage" class = "image" src ="https://upload.wikimedia.org/wikipedia/commons/d/dd/University_of_Virginia_Rotunda_logo.svg"></a>
+
+        <a id="navLogo" class="navbar-brand" style = "font-family: Montserrat;
+        color: black; font-size: 30px; padding-left: 5px;" href="/accounts/profile">Schedule Advisor</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="offcanvasNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex = "-1" id="navbarSupportedContent" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header" style = "text-align: center">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel" style = "font-family: Merriweather;">Navigation Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class = "offcanvas-body"> 
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          </div>
+          </ul>
+        </div>
+      </div>
+    </nav>
+</header>
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<body class="banner">
+    <div id="splashPageText">
+       <div id="innerSplashPageBoxLogInScreen">
+          <h1 class="signInAndUpTextOnLoginAndSignUpPages">{% trans "Sign Up" %}</h1>
+
+        <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+
+        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+          {% csrf_token %}
+          {{ form.as_p }}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+          <button type="submit" class = "btn btn-dark btn-lg">{% trans "Sign Up" %} &raquo;</button>
+        </form>
+      </div>
+    </div>
+</body>
+
+{% endblock %}

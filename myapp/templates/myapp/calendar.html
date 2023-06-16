@@ -1,0 +1,301 @@
+<!--Inspiration: https://codepen.io/alvarotrigo/pen/KKQzvdr -->
+
+  <title>Calendar</title>
+  {% extends 'myapp/base.html'%}
+  {% load static %}
+  <head>
+
+  {% block content %}
+  {% block cal_css %}
+  <link rel="stylesheet" href="{% static 'myapp/calendar_style.css' %}">
+  <script src="https://use.fontawesome.com/releases/v6.1.1/js/all.js"></script>
+  {% endblock %}
+  <style>
+    h1,h2,h3,h4,h5,h6,button,table,div,p,td{
+      font-family: 'Montserrat';
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/montserrat/v25/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCvr6Hw3aXpsog.woff2) format('woff2');
+    }
+    div,p,td{
+      font-weight: bolder !important;
+    }
+  </style>
+  </head>
+  
+  <body class = "bannerWhiteGradient">
+    
+  <table style="width:100%">
+    <!-- Debugging: {% for day in schedule %}
+      {% for courses in day %}
+      <tr>
+        <td>{{courses.course_days_of_week}} </td>
+      </tr>
+        <tr>
+            <td>{{courses.course_subject}}, {{courses.start_tag}}, {{courses.end_tag}}, {{courses.course_start_time}}</td>
+        </tr>
+      {% endfor %}
+    {% endfor %} -->
+  </table>
+    <div id ="SignedInScreenInnerContainer" class = "container">
+    <center>
+    <h1 style="font-weight: bolder;">Calendar</h1>
+    <hr>
+  </center>
+    <div class="calendar">
+      <div class="timeline">
+        <div class="spacer"></div>
+        <!-- dont delete this comment <div class="time-marker">8 AM</div> -->
+        <div>8 AM</div>
+        <div>9 AM</div>
+        <div>10 AM</div>
+        <div>11 AM</div>
+        <div>12 PM</div>
+        <div>1 PM</div>
+        <div>2 PM</div>
+        <div>3 PM</div>
+        <div>4 PM</div>
+        <div>5 PM</div>
+        <div>6 PM</div>
+        <div>7 PM</div>
+        <div>8 PM</div>
+      </div>
+      <div class="days">
+        {% for DAY, courses in week.items %}
+        <div class="day {{DAY}}">
+          <div class="date">
+            <p class="date-day">{{DAY}}</p>
+          </div>
+          <div class="events">
+            {% for class in courses %}
+            <div class="event start-{{ class.start_tag }} end-{{ class.end_tag }} class-{{ class.coursenum }}">
+              {% if class.short_class == False %}
+              <div class="title" style = "padding-bottom:2px;"><b>{{class.course_mnemonic}} {{class.course_catalog_nbr}}</b></div>
+              <div class="time" style = "margin-bottom:1px; font-size:16px;font-weight: 80px;">{{class.course_start_time}} - {{class.course_end_time}}</div>
+              {% else %}
+              <div class="title" style = "display:inline;"><b>{{class.course_mnemonic}} {{class.course_catalog_nbr}}</b></div>
+              <div style="margin-left: 10px; margin-top:-5px; display:inline; position: absolute;">
+                <div class="time" style = "font-size:12px;">{{class.course_start_time}} - </div>
+                <div class="time" style = "font-size:12px;">{{class.course_end_time}}</div>
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+
+        
+        <!-- <div class="day mon">
+          <div class="date">
+            <p class="date-day">MON</p>
+          </div>
+            <div class="events">
+              {% for class in schedule.0 %}
+              <div class="event start-{{class.start_tag }} end-{{class.end_tag }} class1">
+                <p class="title">{{class.course_mnemonic}} {{class.course_catalog_nbr}}</p>
+                <p class="time">{{class.course_start_time}} - {{class.course_end_time}}</p>
+              </div>
+              {% endfor %}
+            </div>
+        </div>
+
+        
+        <div class="day tue">
+          <div class="date">
+            <p class="date-day">TUE</p>
+          </div>
+            <div class="events">
+              {% for class in schedule.1 %}
+              <div class="event start-{{class.start_tag }} end-{{class.end_tag }} class1">
+                <p class="title">{{class.course_mnemonic}} {{class.course_catalog_nbr}}</p>
+                <p class="time">{{class.course_start_time}} - {{class.course_end_time}}</p>
+              </div>
+              {% endfor %}
+            </div>
+          
+        </div>
+
+        
+        <div class="day wed">
+          <div class="date">
+            <p class="date-day">WED</p>
+          </div>
+            <div class="events">
+              {% for class in schedule.2 %}
+              <div class="event start-{{class.start_tag }} end-{{class.end_tag }} class1">
+                <p class="title">{{class.course_mnemonic}} {{class.course_catalog_nbr}}</p>
+                <p class="time">{{class.course_start_time}} - {{class.course_end_time}}</p>
+              </div>
+              {% endfor %}
+            </div>
+        </div>
+
+        
+        <div class="day thu">
+          <div class="date">
+            <p class="date-day">THU</p>
+          </div>
+            <div class="events">
+              {% for class in schedule.3 %}
+              <div class="event start-{{class.start_tag }} end-{{class.end_tag }} class1">
+                <p class="title">{{class.course_mnemonic}} {{class.course_catalog_nbr}}</p>
+                <p class="time">{{class.course_start_time}} - {{class.course_end_time}}</p>
+              </div>
+              {% endfor %}
+            </div>
+        </div>
+
+        
+        <div class="day fri">
+          <div class="date">
+            <p class="date-day">FRI</p>
+          </div>
+            <div class="events">
+              {% for class in schedule.4 %}
+              <div class="event start-{{class.start_tag }} end-{{class.end_tag }} class1">
+                <p class="title">{{class.course_mnemonic}} {{class.course_catalog_nbr}}</p>
+                <p class="time">{{class.course_start_time}} - {{class.course_end_time}}</p>
+              </div>
+              {% endfor %}
+            </div>
+        </div> -->
+
+      </div>
+    </div>
+    <br>
+  <center>
+    <h1 style="font-weight: bolder;">Courses in Calendar:</h1>
+    {% if usersSchedule.isRejected%}
+      <p style = "color: gray; font-size: 12px;">These classes are not necessarily the same as your <a href="/accounts/profile">submitted schedule.</a></p>
+    {% elif usersSchedule.status %}
+      <p style = "color: gray; font-size: 12px;">These classes are not necessarily the same as your <a href="/accounts/profile">submitted schedule.</a></p>
+    {% else %}
+      <p style = "color: gray; font-size: 12px;">These classes are not necessarily the same as your <a href="/accounts/profile">submitted schedule.</a></p>
+    {% endif %}
+  </center>
+  {% if courses_in_calendar|length == 0 %}
+    <br>
+    <center><h4 style="font-weight: bold;">You have no courses in your Calendar</h4></center>
+    <br>
+  {% else %}
+    <table style="border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);">
+      <tr class = "title-row">
+        <div class = "row"> 
+          <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+            <th>Course Number</th>
+          </div>
+          <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+            <th>Course Name</th>
+          </div>
+          <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+            <th>Time Offered</th>
+          </div>
+          <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+            <th>Professor</th>
+          </div>
+          <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+            <th>Location</th>
+          </div>
+          <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+            <th>Modify Schedule</th>
+          </div>
+        </div>
+      </tr>
+      <hr>
+    {% for course in courses_in_calendar %}
+      <tr class = "main-rows">
+          <td>{{course.course_mnemonic}} {{course.course_catalog_nbr}}
+            <button id="course{{ forloop.counter }}" class = "btn btn-primary" onclick = "redirectToExternal('{{courseVar}}', '{{ course.course_mnemonic }}', '{{ course.course_catalog_nbr}}')"> Course Forum Link</button>
+              <script>
+                function redirectToExternal(var1, var2, var3) {
+                    var url = "https://thecourseforum.com/" + var1 + "/" + var2 + "/" + var3;
+                    //window.location.href = url;
+                    window.open(url); //opens in new tab
+                }
+            </script>
+          </td>
+          <td>{{course.course_subject}}</td>
+          {% if course.course_start_time != "" %}
+            <td>{{course.course_days_of_week}} {{course.course_start_time}} - {{course.course_end_time}}</td>
+          {% else %}
+            <td>TBA</td>
+          {% endif %}
+          {%comment%}<td>{{course.course_days_of_week}} {{course.course_start_time}} - {{course.course_end_time}} </td>{%endcomment%}
+          {% if course.course_instructor != "" %}
+            <td>{{course.course_instructor}}</td>
+          {% else %}
+            <td>TBA</td>
+          {% endif %}
+          {%comment%}<td>{{course.course_instructor}}</td>{%endcomment%}
+          {% if course.course_start_time != "" %}
+            <td>{{course.course_location}}</td>
+          {% else %}
+            <td>TBA</td>
+          {% endif %}
+          {%comment%}<td>{{course.course_location}}</td>{%endcomment%}
+          <td>
+              <form method="POST" action="{% url 'removeFromSchedule' course.pk%}">
+                {% csrf_token %}
+                <input type="hidden" name="pk" value="{{ course.pk }}">
+                <button type="submit" class = "btn btn-danger buttonShoppingCartandBrowseCourses" style="font-weight:bold;">Drop Course
+                  <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </button>
+              </form>
+            </td>
+      </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+  <center>
+  <a href="/accounts/profile/shopping_cart"><button class = "btn btn-lg btn-primary"> Add More Courses To Calendar<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+  </svg></button></a>
+</center>
+  <br>
+  <br>
+  <br>
+  <center>
+  <h1 style="font-weight: bolder;">Submit Course Calender for Approval:</h1>
+  <hr>
+  <br>
+  {% if usersSchedule is None %}
+    <h4 style="font-weight: bold;">Status: Schedule Not Submitted <i class="fa-light fa-memo-circle-check" style="color: #07cf1f;"></i></h4>
+    <p style = "color: gray; font-size: 12px;">You can always overwrite a submission by resubmitting the form</p>
+  {% elif usersSchedule.isRejected%}
+    <h4 style="font-weight: bold;">Status: Rejected By Advisor <i class="fa-regular fa-circle-xmark" style="color: #ec1349;"></i></h4>
+    <p style = "color: gray; font-size: 12px;">You must submit a new Schedule!</p>
+  {% elif usersSchedule.status %}
+    <h4 style="font-weight: bold;">Status: Approved By Advisor <i class="fa-solid fa-square-check" style="color: #46b458;"></i></h4>
+    <p style = "color: gray; font-size: 12px;">Your Schedule has been approved, do not resubmit unless you need to make changes</p>
+    <p style = "color: gray; font-size: 12px;">You may view your finalized schedule on the <a href="/accounts/profile">Home Page</a></p>
+  {% else %}
+    <h4 style="font-weight: bold;">Status: Pending (Waiting On Advisor)<i class="fa-regular fa-hourglass" style="color: #e0d900;"></i></h4>
+    <p style = "color: gray; font-size: 12px;">Submitting multiple schedules will overwrite the original submission</p>
+  {% endif %}
+  <br>
+  <!-- <hr> -->
+  <!--https://stackoverflow.com/questions/16849117/html-how-to-do-a-confirmation-popup-to-a-submit-button-and-then-send-the-reque -->
+  <form method="POST" action="{% url 'createSchedule' user.pk %}" onsubmit="return confirm ('Are you sure you want to submit this schedule?')">
+    {% csrf_token %}
+    <input type="hidden" name="pk" value="{{user.pk}}">
+    <button type="submit" class = "btn btn-success buttonShoppingCartandBrowseCourses" style="font-weight: bold;">Submit Schedule to Advisor
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+        <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+      </svg>
+    </button>
+  </form>
+<hr>
+</center>
+</div>
+  </body>
+
+  {% endblock %}
+</html>
+

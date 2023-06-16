@@ -1,0 +1,421 @@
+<title>Browse Courses</title>
+{% extends 'myapp/base.html'%}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+<link rel="icon" href="{% static 'myapp/University_of_Virginia_Rotunda_logo.svg' %}">
+<script src="https://use.fontawesome.com/releases/v6.1.1/js/all.js"></script>
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap">
+  <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+  <style>
+    h1,h2,h3,h4,h5,h6,button,select,option,table,th,td,a{
+      font-weight: bolder !important;
+      font-family: 'Montserrat';
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/montserrat/v25/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCvr6Hw3aXpsog.woff2) format('woff2');
+    }
+    .alert-messages {
+      font-weight: bolder !important;
+    }
+  </style>
+</head>
+<body class = "bannerWhiteGradient">
+  <div id ="SignedInScreenInnerContainer" class = "container">
+    <br>
+    <center>
+    <h1 id="">Browse Courses</h1>
+    <hr>
+          {% csrf_token %}
+    {% comment %}
+    <div id="filter-dropdown" style="display:none;">
+      <h4> Find Specific Classes In Department</h4> 
+      <select name="classes" id="mnemonic">
+        <option value=""> Subject </option>
+        </select>
+        <select id ="classes">
+          <option value=""> Class </option>
+        </select>
+        <select id="number">
+          <option value="">Catalog Number</option>
+        </select>
+        <select id="professor">
+          <option value="">Professor</option>;
+        </select>
+        <select id="day">
+          <option value="">Days</option>
+        </select>
+        <select id = "time-range">
+          <option value="">Time</option>
+        </select>
+    </div>
+    {% endcomment %}
+    <br>
+    <div class = "container" style = "justify-content: center;">
+    <form action="{% url 'api_data_search' %}" method="get" style = "display: flex; justify-content: center; height: 40px">
+      {%csrf_token%}
+      <i class="fa-solid fa-magnifying-glass" style = "align-self: center; padding: 10px 20px; background-color: white;"> </i>
+      <input class="form-control form-control-sm" type="text" name ="query" id="query" style = "font-family: 'Poppins', sans-serif; box-sizing: border-box; width: 50%; border: none; outline: none" placeholder="Search Courses!"> <!-- Add the search input field -->
+      <button id = "search-button" type="submit" style = "margin-left: 5px; margin-top: 4px;">Submit</button>
+    </form> 
+  </div>
+    <br>
+    {% comment %}
+      <script>
+          document.getElementById('search-button').addEventListener('click', function() {
+          document.getElementById('filter-dropdown').style.display = 'block';
+          localStorage.setItem('filter-dropdown-visible', 'true');
+        });
+
+        // Check if the filter dropdown should be visible when the page is loaded
+        if (localStorage.getItem('filter-dropdown-visible') === 'true') {
+          document.getElementById('filter-dropdown').style.display = 'block';
+        }
+          // function generateStartTime(cls){
+          //   let start_time = '';
+          //   let end_time = '';
+          //   let startHour = parseInt(cls.meetings[0].start_time.substring(0, 2));
+          //   console.log(startHour);
+          //   let startMinute = cls.meetings[0].start_time.substring(3, 5);
+          //   console.log(startMinute);
+          //   // modify start_time to display in desired format
+          //   if (startHour == 12) {
+          //     start_time = startHour + ":" + startMinute + " pm";
+          //   } else if (startHour > 12) {
+          //     startHour -= 12;
+          //     start_time = startHour + ":" + startMinute + " pm";
+          //   } else {
+          //     start_time = startHour + ":" + startMinute + " am";
+          //   }
+          //   return start_time;
+          // }
+          // function generateEndTime(cls){
+          //   // extract hour and minute values for end_time
+          //   let endHour = parseInt(cls.meetings[0].end_time.substring(0, 2));
+          //   let endMinute = cls.meetings[0].end_time.substring(3, 5);
+
+          //   // modify end_time to display in desired format
+          //   if (endHour == 12) {
+          //     end_time = endHour + ":" + endMinute + " pm";
+          //   } else if (endHour > 12) {
+          //     endHour -= 12;
+          //     end_time = endHour + ":" + endMinute + " pm";
+          //   } else {
+          //     end_time = endHour + ":" + endMinute + " am";
+          //   }
+          //   return end_time;
+          // }
+          const classes = JSON.parse('{{ courses|safe }}');
+          console.log(classes);
+          const subjectSelect = document.getElementById('mnemonic')
+          const nameSelect = document.getElementById('classes');
+          const catalogSelect = document.getElementById('number');
+          const professorSelect = document.getElementById('professor')
+          const daySelect = document.getElementById('day');
+          const timeSelect = document.getElementById('time-range');
+          
+          const option2 = document.createElement('option');
+          option2.value = classes[0].fields.course_mnemonic;
+          option2.text = classes[0].fields.course_mnemonic;
+          subjectSelect.add(option2);
+
+        // Add an event listener for when the name of class is changed
+        subjectSelect.addEventListener('change', () =>{
+          nameSelect.innerHTML = 'Class Name';
+          catalogSelect.innerHTML = 'Catalog';
+          professorSelect.innerHTML = 'Professor';
+          daySelect.innerHTML = 'Days';
+          timeSelect.innerHTML = 'Times';
+          
+          const selectedSubject = subjectSelect.value;
+          const courses = [...new Set(classes.filter(c => c.fields.course_mnemonic === selectedSubject).map(c => c.fields.course_subject))];
+          const option = document.createElement('option');
+          option.value = 'Course';
+          option.text = 'Course';
+          nameSelect.add(option);
+          for (const course of courses) {
+            const option = document.createElement('option');
+            option.value = course;
+            option.text = course;
+            nameSelect.add(option);
+          }
+      });
+
+        // Add an event listener for when the subject is changed
+        nameSelect.addEventListener('change', () => {
+          // Clear the catalog, day, and time options
+          catalogSelect.innerHTML = 'Catalog Number';
+          professorSelect.innerHTML = 'Professor';
+          daySelect.innerHTML = 'Days';
+          timeSelect.innerHTML = 'Times';
+  
+        // Get the selected subject
+          const selectedCourse = nameSelect.value;
+        // Populate the catalog select options
+          const catalogs = [...new Set(classes.filter(c => c.fields.course_subject === selectedCourse).map(c => c.fields.course_catalog_nbr))];
+          const option = document.createElement('option');
+          option.value = 'Catalog Number';
+          option.text = 'Catalog Number';
+          catalogSelect.add(option);
+          for (const catalog of catalogs) {
+            const option = document.createElement('option');
+            option.value = catalog;
+            option.text = catalog;
+            catalogSelect.add(option);
+          }
+      });
+      
+      // Add an event listener for when the catalog is changed
+      catalogSelect.addEventListener('change', () => {
+        // Clear the day and time options
+        professorSelect.innerHTML = 'Professor';
+        daySelect.innerHTML = 'Days';
+        timeSelect.innerHTML = 'Times';
+      
+        // Get the selected subject and catalog
+        const selectedCourse = nameSelect.value;
+        const selectedCatalog = catalogSelect.value;
+      
+        const matchingProfessors = classes.filter(c => c.fields.course_subject === selectedCourse && c.fields.course_catalog_nbr === selectedCatalog)
+        const professors = [...new Set(matchingProfessors.map(c => c.fields.course_instructor))]
+        const option = document.createElement('option');
+        option.value = 'Professors';
+        option.text = 'Professors';
+        professorSelect.add(option);
+        for (const professor of professors) {
+          const option = document.createElement('option');
+          option.value = professor;
+          option.text = professor;
+          professorSelect.add(option);
+        }
+      });
+      professorSelect.addEventListener('change', () => {
+        daySelect.innerHTML = 'Days';
+        timeSelect.innerHTML = 'Times';
+        
+        const selectedCourse = nameSelect.value;
+        const selectedCatalog = catalogSelect.value;
+        const selectedProfessor = professorSelect.value;
+        const matchingDays = classes.filter(c => c.fields.course_subject === selectedCourse && c.fields.course_catalog_nbr === selectedCatalog && c.fields.course_instructor === selectedProfessor);
+        // Populate the day select options
+        const days = [...new Set(matchingDays.map(c => c.fields.course_days_of_week))];
+        const option = document.createElement('option');
+        option.value = 'Days';
+        option.text = 'Days';
+        daySelect.add(option);
+        for (const day of days) {
+          const option = document.createElement('option');
+          option.value = day;
+          option.text = day;
+          daySelect.add(option);
+        }
+      });
+      
+      // Add an event listener for when the day is changed
+      daySelect.addEventListener('change', () => {
+        // Clear the time options
+        timeSelect.innerHTML = 'Times';
+      
+        // Get the selected subject, catalog, professor, and day
+        const selectedCourse = nameSelect.value;
+        const selectedCatalog = catalogSelect.value;
+        const selectedProfessor = professorSelect.value;
+        const selectedDay = daySelect.value;
+      
+        // Get the classes that match the selected subject, catalog, professor, and day
+        const matchingClasses = classes.filter(c => c.fields.course_subject === selectedCourse && c.fields.course_catalog_nbr === selectedCatalog && c.fields.course_instructor === selectedProfessor && c.fields.course_days_of_week === selectedDay);
+        console.log(matchingClasses);
+        const option = document.createElement('option');
+        option.value = 'Times';
+        option.text = 'Times';
+        timeSelect.add(option);
+        // Populate the time select options
+        for (const cls of matchingClasses) {
+          const option = document.createElement('option');
+          option.value = `${cls.fields.course_start_time} - ${cls.fields.course_end_time}`;
+          option.text = `${cls.fields.course_start_time} - ${cls.fields.course_end_time}`;
+          timeSelect.add(option);
+        }
+        // const submitBtn = document.getElementById("submit-btn");
+        // submitBtn.addEventListener("click", handleFilter);
+        // function handleFilter(event) {
+        //   event.preventDefault(); // prevent the default form submission behavior
+
+        //   // get the selected options from the select elements
+        //   const subjectSelect = document.getElementById('mnemonic')
+        //   const catalogSelect = document.getElementById('number');
+        //   const professorSelect = document.getElementById('professor')
+        //   const daySelect = document.getElementById('day');
+        //   const timeSelect = document.getElementById('time-range');
+
+        //   const selectedSubject = subjectSelect.value;
+        //   const selectedCatalog = catalogSelect.value;
+        //   const selectedProfessor = professorSelect.value;
+        //   const selectedDay = daySelect.value;
+        //   const selectedTime = timeSelect.value;
+
+        //   // filter the classes based on the selected options
+        //   const filteredClasses = classes.filter((classObj) => {
+        //     let start_time = generateStartTime(classObj);
+        //     let end_time = generateEndTime(classObj);
+        //     if (
+        //       (selectedCatalog === "Catalog Number" ||  selectedCatalog === classObj.catalog_nbr) && (selectedProfessor === "" || selectedProfessor 
+        //       === "Professors" || selectedProfessor === classObj.instructors[0].name) &&
+        //       (selectedDay === "" || selectedDay === "Days" || selectedDay === classObj.meetings[0].days) &&
+        //       (selectedTime === "" || selectedTime === "Times" ||
+        //         (selectedTime === `${start_time} - ${end_time}`))
+        //     ) {
+        //       return true;
+        //     }
+        //     return false;
+        //   });
+
+        //   // update the displayed classes with the filtered classes
+        //   const classTable = document.getElementById("class-table");
+        //   classTable.innerHTML = ""; // clear the current table
+
+        //   // Create table header row
+        //   const headerRow = document.createElement("tr");
+        //   headerRow.classList.add('title-row');
+        //   const headerCourseCell = document.createElement("th");
+        //   headerCourseCell.textContent = "Course";
+        //   const headerCatalogNumberCell = document.createElement("th");
+        //   headerCatalogNumberCell.textContent = "Catalog Number";
+        //   const headerProfessorCell = document.createElement("th");
+        //   headerProfessorCell.textContent = "Professor";
+        //   const headerDaysCell = document.createElement("th");
+        //   headerDaysCell.textContent = "Days";
+        //   const headerTimeCell = document.createElement("th");
+        //   headerTimeCell.textContent = "Time";
+        //   const headerAddCartCell = document.createElement("th");
+        //   headerAddCartCell.textContent = "Add Cart"
+        //   headerRow.appendChild(headerCourseCell);
+        //   headerRow.appendChild(headerCatalogNumberCell);
+        //   headerRow.appendChild(headerProfessorCell);
+        //   headerRow.appendChild(headerDaysCell);
+        //   headerRow.appendChild(headerTimeCell);
+        //   classTable.appendChild(headerRow);
+
+        //   // Create table row for each class object
+        //   filteredClasses.forEach((classObj) => {
+        //     const classRow = document.createElement("tr");
+        //     classRow.classList.add('main-rows');
+        //     const courseCell = document.createElement("td");
+        //     courseCell.textContent = classObj.subject;
+        //     const catalogNumberCell = document.createElement("td");
+        //     catalogNumberCell.textContent = classObj.catalog_nbr;
+        //     const professorCell = document.createElement("td");
+        //     professorCell.textContent = classObj.instructors[0].name;
+        //     const daysCell = document.createElement("td");
+        //     daysCell.textContent = classObj.meetings[0].days;
+        //     const timeCell = document.createElement("td");
+        //     const startTime = generateStartTime(classObj);
+        //     const endTime = generateEndTime(classObj);
+        //     timeCell.textContent = `${startTime}-${endTime}`;
+        //     const buttonCell = document.createElement("td");
+        //     classRow.appendChild(courseCell);
+        //     classRow.appendChild(catalogNumberCell);
+        //     classRow.appendChild(professorCell);
+        //     classRow.appendChild(daysCell);
+        //     classRow.appendChild(timeCell);
+        //     classTable.appendChild(classRow);
+        //   });
+        // }
+        });
+      </script>
+      {% endcomment %}
+</center>
+  <br>
+  <table id = "class-table" style="width:100%">
+    <tr class = "title-row">
+      <div class = "row"> 
+        <div class = "col col-lg-3 col-md-3 col-sm-3"> 
+          <th>Course Number</th>
+        </div>
+        <div class = "col col-lg-3 col-md-3 col-sm-3"> 
+          <th>Description</th>
+        </div>
+        <div class = "col col-lg-3 col-md-3 col-sm-3"> 
+          <th>Type and Amount of Credits</th>
+        </div>
+        <div class = "col col-lg-3 col-md-3 col-sm-3"> 
+          <th>Days & Time</th>
+        </div>
+        <div class = "col col-lg-3 col-md-3 col-sm-3"> 
+          <th>Professor</th>
+        </div>
+        <div class = "col col-lg-3 col-md-3 col-sm-3"> 
+          <th>Availability</th>
+        </div>
+        <div class = "col col-lg-3 col-md-3 col-sm-3"> 
+          <th>Add Class</th>
+        </div>
+      </div>
+    </tr>
+      
+    {% for course, enrollment in dict.items %}
+    <tr class = "main-rows">
+        <div class = "row"> 
+            <div class = "col col-lg-3 col-md-3 col-sm-3"> 
+              <td >{{course.course_mnemonic}} {{course.course_catalog_nbr}}</td>
+            </div>
+            <div class = "col col-lg-3 col-md-3 col-sm-3"> 
+              <td>{{course.course_subject}}</td>
+            </div>
+            <div class = "col col-lg-3 col-md-3 col-sm-3"> 
+              <td>{{course.course_type}} ({{course.course_credits}})</td>
+            </div>
+            <div class = "col col-lg-3 col-md-3 col-sm-3">
+              {% if course.course_start_time != "" %}
+                <td>{{course.course_days_of_week}} {{course.course_start_time}} - {{course.course_end_time}}</td>
+              {% else %}
+              <td>TBA</td>
+              {% endif %}
+            </div>
+            <div class = "col col-lg-3 col-md-3 col-sm-3"> 
+              <td>{{course.course_instructor}}</td>
+            </div>
+            <div class = "col col-lg-3 col-md-3 col-sm-3">
+              {% if enrollment == 0 %}
+                <td> Class Is Full</td>
+              {% else %}
+                <td> {{enrollment}}/{{course.course_size}}</td>
+              {% endif %}
+           </div>
+        </div>
+        {% if enrollment == 0 %}
+        <td> Cannot Add Course To Cart</td>
+        {% else %}
+        <td> 
+        <form method="POST" action="{% url 'addToCart' course.pk%}">
+          {% csrf_token %}
+          <input type="hidden" name="pk" value="{{ course.pk }}">
+          <button type="submit" class = "btn btn-primary btn-sm buttonShoppingCartandBrowseCourses">Add to Cart
+            <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+          </button>
+        </form> 
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    
+  </table>
+  </div>
+</body>
+
+ 
+{% endblock %}
+</html>

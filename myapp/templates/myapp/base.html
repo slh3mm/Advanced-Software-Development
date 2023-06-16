@@ -1,0 +1,117 @@
+{% load static %}
+
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap">
+  <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+  <title>Home</title>
+  <link rel="icon" href="{% static 'myapp/University_of_Virginia_Rotunda_logo.svg' %}">
+</head>
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap">
+  <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+  <style>
+    a{
+      font-weight: bolder !important;
+      font-family: 'Montserrat';
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/montserrat/v25/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCvr6Hw3aXpsog.woff2) format('woff2');
+    }
+    .alert-messages {
+      font-weight: bolder !important;
+    }
+  </style>
+</head>
+<header>
+    <nav id = "wholeNavBar" class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a href="/accounts/profile"><img id = "rontundaImage" class = "image" src ="https://upload.wikimedia.org/wikipedia/commons/d/dd/University_of_Virginia_Rotunda_logo.svg"></a>
+
+          <a id="navLogo" class="navbar-brand" style = "
+          color: black; font-size: 30px; padding-left: 5px; font-weight: bolder;" href="/accounts/profile">Schedule Advisor</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="offcanvasNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="offcanvas offcanvas-end" tabindex = "-1" id="navbarSupportedContent" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header" style = "text-align: center">
+              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Navigation Menu</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class = "offcanvas-body"> 
+              <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" style = "font-size: 20px;" href="/accounts/profile/">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" style = "font-size: 20px;" href="/accounts/profile/browse_courses">Browse Courses</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" style = "font-size: 20px;" href="/accounts/profile/shopping_cart">Shopping Cart</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" style = "font-size: 20px;" href="/accounts/profile/calendar">Calendar</a>
+                </li>
+                <li class = "nav-item"> 
+                  {% if user.is_authenticated %}
+                  <form action="/accounts/logout">
+                    <button class ="btn" style="background-color: #1e6db3; color: whitesmoke; margin-top: 4px; font-weight: bolder;">Log Out</button>
+                  </form>
+                  {% else %}
+                  <form action="/accounts/login">
+                    <button class ="btn" style="background-color: #1e6db3; color: whitesmoke; margin-top: 4px; font-weight: bolder;">Log In</button>
+                  </form>
+                    {% endif %}
+                </li>
+            </div>
+                  <!--
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+              </li>
+              -->
+            </ul>
+          </div>
+        </div>
+      </nav>
+</header>
+{% bootstrap_messages %}
+<!--
+<div class = "containerCenter">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Schedule Advisor</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/polls">Polls <span class="sr-only"></span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/polls/comments/list">Comments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/polls/comments/">Create Comment</a>
+          </li>
+      </ul>
+    </div>
+  </nav>
+  -->
+
+  {% block content %}
+  #https://www.youtube.com/watch?v=rjxpL89BEX4
+  {% endblock %}
+
+ <div class = "container" style = "text-align : center">
+  <p class = "footer" style="color: grey; text-align : center">Copyright 2023. Ethan Ogilvie, Spencer Hernandez, Adarsh Mohanraju, Cameron Greene, Joel Valliath</p>
+ </div>

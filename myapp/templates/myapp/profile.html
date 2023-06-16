@@ -1,0 +1,210 @@
+{% extends 'myapp/base.html'%}
+
+{% block content %}
+
+{% load static%}
+
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap">
+  <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+  <script src="https://use.fontawesome.com/releases/v6.1.1/js/all.js"></script>
+  <style>
+    *{
+      font-family: 'Montserrat';
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/montserrat/v25/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCvr6Hw3aXpsog.woff2) format('woff2');
+    }
+    h1,h2,h3,h4,h5,h6,button{
+      font-weight: bolder !important;
+    }
+  </style>
+</head>
+  <body class = "bannerWhiteGradient" style = "text-align: center;">
+    <div id ="SignedInScreenInnerContainer" class = "container">
+      {% if user.is_superuser %}
+        <h1 id = "welcomeMessageHeader" style = "font-family: 'Merriweather';">Welcome Instructor: {{user.get_username}}</h1>
+      {% else %}
+        <h1 id = "welcomeMessageHeader" style = "font-family: 'Merriweather';">Welcome Student: {{user.get_username}}</h1>
+      {% endif %}
+      <br>
+      <!-- {% if usersSchedule is None %}
+      <h4 style="font-weight: bold;">Status: Schedule Not Submitted <i class="fa-light fa-memo-circle-check" style="color: #07cf1f;"></i></h4>
+      {% elif usersSchedule.isRejected%}
+        <h4 style="font-weight: bold;">Status: Rejected By Advisor <i class="fa-regular fa-circle-xmark" style="color: #ec1349;"></i></h4>
+      {% elif usersSchedule.status %}
+        <h4 style="font-weight: bold;">Status: Approved By Advisor <i class="fa-solid fa-square-check" style="color: #46b458;"></i></h4>
+      {% else %}
+        <h4 style="font-weight: bold;">Status: Pending(Waiting On Advisor)<i class="fa-regular fa-hourglass" style="color: #e0d900;"></i></h4>
+      {% endif %} -->
+      <div class = "container">
+      <h3 style = "font-size: 35px; font-weight: bold"> What do you want to do today?</h3>
+      <br>
+
+      {% if usersSchedule is None %}
+        <h4 style="font-weight: bold;">Status: Schedule Not Submitted <i class="fa-light fa-memo-circle-check" style="color: #07cf1f;"></i></h4>
+      {% elif usersSchedule.isRejected%}
+        <h4 style="font-weight: bold;">Schedule Status: Rejected By Advisor <i class="fa-regular fa-circle-xmark" style="color: #ec1349;"></i></h4>
+        <br>
+        <p style = "font-size: 18px; font-weight: bolder;">Your Rejected Schedule:</p>
+        <thead>
+          <table class = "table" style="border-collapse: collapse;
+          margin: 25px 0;
+          font-size: 0.9em;
+          font-family: sans-serif;
+          min-width: 400px;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);">
+            <tr class = "title-row" style = "background-color: rgb(79, 78, 78);
+            color: #ffffff;
+            text-align: center;">
+            <div class = "row">
+              <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+                <th>Course</th>
+              </div>
+              <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+                <th>Days</th>
+              </div>
+              <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+              <th>Time</th>
+              </div>
+            </div>
+            </tr>
+          </thead>
+          {% for course in usersSchedule.courses.all %}
+            <tr  class = "main-rows" style = "border-bottom: 1px solid #dddddd;background-color: light gray;">
+              <td style="font-weight: bold;">{{course.course_subject}}</td>
+              <td style="font-weight: bold;">{{course.course_days_of_week}}</td>
+              <td style="font-weight: bold;">{{course.course_start_time}} - {{course.course_end_time}}</td>
+            </tr>
+          {% endfor %} 
+        </table>
+        <br>
+      {% elif usersSchedule.status %}
+        <h4 style="font-weight: bold;">Schedule Status: Approved By Advisor <i class="fa-solid fa-square-check" style="color: #46b458;"></i></h4>
+        <br>
+        <p style = "font-size: 18px; font-weight: bolder;">Your Approved Schedule:</p>
+        <thead>
+          <table class = "table" style="border-collapse: collapse;
+          margin: 25px 0;
+          font-size: 0.9em;
+          font-family: sans-serif;
+          min-width: 400px;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);">
+            <tr class = "title-row" style = "background-color: rgb(79, 78, 78);
+            color: #ffffff;
+            text-align: center;">
+            <div class = "row">
+              <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+                <th>Course</th>
+              </div>
+              <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+                <th>Days</th>
+              </div>
+              <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+              <th>Time</th>
+              </div>
+            </div>
+            </tr>
+          </thead>
+          {% for course in usersSchedule.courses.all %}
+            <tr  class = "main-rows" style = "border-bottom: 1px solid #dddddd;background-color: light gray;">
+              <td style="font-weight: bold;">{{course.course_subject}}</td>
+              <td style="font-weight: bold;">{{course.course_days_of_week}}</td>
+              <td style="font-weight: bold;">{{course.course_start_time}} - {{course.course_end_time}}</td>
+            </tr>
+          {% endfor %} 
+        </table>
+        <br>
+        {% else %}
+        <h4 style="font-weight: bold;">Schedule Status: Pending (Waiting On Advisor)<i class="fa-regular fa-hourglass" style="color: #e0d900;"></i></h4>
+        <br>
+        <p style = "font-size: 18px; font-weight: bolder;">Your Submitted Schedule:</p>
+        <thead>
+          <table class = "table" style="border-collapse: collapse;
+          margin: 25px 0;
+          font-size: 0.9em;
+          font-family: sans-serif;
+          min-width: 400px;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);">
+            <tr class = "title-row" style = "background-color: rgb(79, 78, 78);
+            color: #ffffff;
+            text-align: center;">
+            <div class = "row">
+              <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+                <th>Course</th>
+              </div>
+              <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+                <th>Days</th>
+              </div>
+              <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+              <th>Time</th>
+              </div>
+            </div>
+            </tr>
+          </thead>
+          {% for course in usersSchedule.courses.all %}
+            <tr  class = "main-rows" style = "border-bottom: 1px solid #dddddd;background-color: light gray;">
+              <td style="font-weight: bold;">{{course.course_subject}}</td>
+              <td style="font-weight: bold;">{{course.course_days_of_week}}</td>
+              <td style="font-weight: bold;">{{course.course_start_time}} - {{course.course_end_time}}</td>
+            </tr>
+          {% endfor %} 
+        </table>
+        <br>
+      {% endif %}
+        
+        <br>
+        <div class = "container"> 
+          <hr style="color: #1e6db3;">
+          <br>
+          <br>
+          <div>
+            <h6 style = "font-size:22.5px;margin-top: 15px;"> Want to Browse Courses? Click below to add to your
+            schedule today!</h6>
+            <br>
+            <a href="browse_courses"><button class = "btn btn-primary btn-lg" style = "margin-bottom: 15px;"> Browse Courses 
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg></button></a>
+          </div>
+          <br>
+          <br>
+          <hr style="color: #1e6db3;">
+          <br>
+          <br>
+          <div>
+            <h6 style = "font-size:22.5px; margin-top: 15px"> Want to Check Shopping Cart? Click below to see a 
+            list of all courses you have added so far!</h6>
+            <br>
+            <a href="shopping_cart"><button class = "btn btn-primary btn-lg" style = "margin-bottom: 15px;"> Go to Shopping Cart <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg></button></a>
+          </div>
+          <br>
+          <br>
+          <hr style="color: #1e6db3;">
+          <br>
+          <br>
+          <div>
+            <h6 style = "font-size:22.5px;margin-top: 15px;"> Want to Check Your Calendar? Click below to see 
+            your schedule with added courses. If you think your schedule is ready, you can also send your schedule to
+          the advisor on this page.</h6>
+            <br>
+            <a href="calendar"><button class = "btn btn-primary btn-lg" style = "margin-bottom: 15px;"> Go to Calendar <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+              <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+            </svg></button></a>
+          </div>
+          <br>
+          <br>
+        </div>
+      </div>
+    </div>
+  </body>
+
+{% endblock %}

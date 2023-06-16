@@ -1,0 +1,150 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+#navLogo{
+    font-weight: 750;
+    letter-spacing: 2.5px;
+    border-bottom: 2px solid #1e6db3;
+    
+}
+table{
+    border: 1.5px solid black;
+    border-collapse: collapse;
+  }
+.title-row th{
+    border: 1.5px solid black;
+    border-collapse: collapse;
+    text-align: center;
+}
+.main-rows td{
+    border: 1.5px solid black;
+    border-collapse: collapse; 
+    text-align: center;
+}
+.buttonShoppingCartandBrowseCourses {
+    margin-bottom: 6px;
+}
+.banner{
+    /*
+    background-image: url("https://news.virginia.edu/sites/default/files/article_image/nau_gift_ss_header.jpg");
+    width: 100%;
+    height: 100vh;
+    background-color: #1e6db3;
+    background-image: linear-gradient(160deg, #43bff8 0%, #e89932 100%);
+    */
+
+    width: 100%;
+    height: 100vh;
+    
+
+    display:table;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://news.virginia.edu/sites/default/files/article_image/nau_gift_ss_header.jpg');
+    background-position:center top;
+
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+
+
+#splashPageText{
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20vh 0;
+}
+
+#splashHeaderText{
+    font-family: Brush Script MT, Brush Script Std, cursive;
+    color: rgb(217, 224, 234);
+    font-size: 70px;
+    
+}
+
+#innerSplashPageBox{
+    background-color: rgba(0, 0, 0, 0.3);
+    /*
+    background-color: rgb(51, 52, 79, 0.65);
+    */
+    padding-left: 250px;
+    padding-right: 250px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    border: 2px solid rgb(255, 255, 255);
+    margin: auto;
+    border-radius: 25px;
+    
+    
+
+}
+
+#splashPageButton{
+    width: 100%;
+}
+
+#rontundaImage{
+    height: 5vh;
+    padding-right: 7.5px ;
+}
+
+#innerSplashPageBoxLogInScreen{
+    background-color: whitesmoke;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    border-radius: 25px;
+    
+}
+
+.signInAndUpTextOnLoginAndSignUpPages{
+    font-weight: 750;
+    letter-spacing: 2.5px;
+    border-bottom: 2px solid #1e6db3;
+}
+
+
+#SignedInScreenInnerContainer{
+    margin-top: 50px;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 50px;
+    background-color: whitesmoke;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 25px;
+    padding-top: 25px;
+    padding-left: 25px;
+    padding-bottom: 25px;
+    padding-right: 25px;
+    border: 1px solid gray;
+}
+
+#welcomeMessageHeader{
+    font-weight: 750;
+    letter-spacing: 2.5px;
+    border-bottom: 2px solid #1e6db3;
+}
+
+#wholeNavBar{
+    border-bottom: 5px solid #1e6db3;
+}
+
+.bannerWhiteGradient{
+    width: 100%;
+    height: 100vh;
+
+    display:table;
+    background: linear-gradient( rgba(247, 247, 247, 0.700), rgba(247, 247, 247, 0.700) ), url('https://news.virginia.edu/sites/default/files/article_image/nau_gift_ss_header.jpg');
+    background-position:center top;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.buttonShoppingCartandBrowseCourses{
+    margin-top: 10px;
+}
+

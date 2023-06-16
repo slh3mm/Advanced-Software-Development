@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<title>Shopping Cart</title>
+{% extends 'myapp/base.html'%}
+{% load static%}
+
+{% block content %}
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap">
+  <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+  <style>
+    h1,h2,h3,h4,h5,h6,button,select,option,table,th,td,label{
+      font-weight: bolder !important;
+      font-family: 'Montserrat';
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/montserrat/v25/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCvr6Hw3aXpsog.woff2) format('woff2');
+    }
+    .alert-messages {
+      font-family: 'Montserrat';
+      font-weight: bolder !important;
+      src: url(https://fonts.gstatic.com/s/montserrat/v25/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCvr6Hw3aXpsog.woff2) format('woff2');
+    }
+  </style>
+</head>
+<script>
+  function updateColor() {
+    var isChecked = document.getElementById("time_switch").checked;
+    var boxes = document.getElementsByClassName("times");
+    //console.log(boxes);
+    for (var i = 0; i < boxes.length; i++){
+      if (isChecked == true) {
+          conflict = boxes[i].getAttribute("title");
+          in_cal = boxes[i].getAttribute("name");
+          console.log(boxes[i], conflict);
+          if(conflict == "True"){
+            boxes[i].style.backgroundColor = "#ff7770";//red
+          }
+          if((conflict == "False" || conflict == "") && in_cal == "False") {
+            boxes[i].style.backgroundColor = "#42d67b";//green
+          }
+          // if(conflict == "") {
+          //   boxes[i].style.backgroundColor = "#3250a8";//blue
+          // }
+      }
+      else{
+        boxes[i].style.backgroundColor = "";
+        //boxes[i].style.backgroundColor = "#f5ef42";//yellow
+      }
+    }
+  }
+</script>
+<body class = "bannerWhiteGradient">
+  <div id ="SignedInScreenInnerContainer" class = "container">
+    <center>
+    <h1>Shopping Cart</h1>
+    <!--https://www.w3schools.com/django/django_template_variables.php-->
+    
+    {% if courses_in_calendar|length >= 1 and courses_in_cart|length != 0 %}
+    <form method="POST" action="{% url 'shoppingCart' %}">
+      {% csrf_token %}
+    <div class="form-check form-switch" style = "left: 50%; position: absolute;-ms-transform: translateX(-50%);
+    transform: translateX(-50%);">
+      <input class="form-check-input" type="checkbox" id="time_switch" name="time_btn" value="On" onchange="updateColor()">
+      <label class="form-check-label" for="time_switch">Show Time Agreements/Disagreements with Calendar</label>
+    </div>
+    </form>
+    <br>
+    <p style = "color: gray; font-size: 10px;">*When toggled, will highlight courses conflicting with those in your schedule</p>
+    {% endif %}
+  </center>
+  {% if courses_in_cart|length == 0 %}
+    <br>
+    <center>
+      <h4>You have no courses in your Cart</h4>
+      <a href="/accounts/profile/browse_courses"><button class = "btn btn-lg btn-primary"> Add More Courses To Cart</button></a>
+    </center>
+    <br>
+  {% else %}
+    <table style="border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);">
+        <thead>
+        <tr class = "title-row" style = "background-color: rgb(79, 78, 78);
+        color: #ffffff;
+        text-align: center;">
+          <div class = "row"> 
+            <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+              <th>Course Number</th>
+            </div>
+            <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+              <th>Course Name</th>
+            </div>
+            <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+              <th>Time Offered</th>
+            </div>
+            <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+              <th>Professor</th>
+            </div>
+            <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+              <th>Availability</th>
+            </div>
+            <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+              <th>Modify Cart</th>
+            </div>
+            <div class = "col col-lg-2 col-md-2 col-sm-2"> 
+              <th>Modify Schedule</th>
+            </div>
+          </div>
+        </tr>
+      </thead>
+        <hr>
+    {% for course, enrollment in dict.items %}
+        <tbody>
+        <tr class = "main-rows" style = "border-bottom: 1px solid #dddddd;background-color: light gray;">
+            <td>{{course.course_mnemonic}} {{course.course_catalog_nbr}}
+              <button id="course{{ forloop.counter }}" class = "btn btn-primary" onclick = "redirectToExternal('{{courseVar}}', '{{ course.course_mnemonic }}', '{{ course.course_catalog_nbr}}')"> Course Forum Link</button>
+              <script>
+                function redirectToExternal(var1, var2, var3) {
+                  var url = "https://thecourseforum.com/" + var1 + "/" + var2 + "/" + var3;
+                  //window.location.href = url;
+                  window.open(url); //opens in new tab
+                }
+            </script>
+            </td>
+            <td>{{course.course_subject}}</td>
+            {% if course.course_start_time != "" %}
+              <!-- <td bgcolor="{{course.color}}">{{course.course_days_of_week}} {{course.course_start_time}} - {{course.course_end_time}} </td> -->
+              {% if course in courses_in_calendar%}
+                <td id="time_box" class="times" title = "{{course.conflict}}" name = "True">{{course.course_days_of_week}} {{course.course_start_time}} - {{course.course_end_time}} </td>
+              {% else %}
+              <td id="time_box" class="times" title = "{{course.conflict}}" name = "False">{{course.course_days_of_week}} {{course.course_start_time}} - {{course.course_end_time}} </td>
+              {% endif %}
+            {% else %}
+              <td>TBA</td>
+            {% endif %}
+            <td>{{course.course_instructor}}</td>
+            <td>{{enrollment}}/{{course.course_size}}</td>
+            <td>
+                <form method="POST" action="{% url 'removeFromCart' course.pk%}">
+                  {% csrf_token %}
+                  <input type="hidden" name="pk" value="{{ course.pk }}">
+                  <button type="submit" class = "btn btn-danger buttonShoppingCartandBrowseCourses">Remove From Cart
+                    <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                      <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                    </svg>
+                  </button>
+                </form>
+              
+              </td>
+              <td>
+                {% if course in courses_in_calendar%}
+                <form method="POST" action="{% url 'removeFromSchedule' course.pk%}">
+                  {% csrf_token %}
+                  <input type="hidden" name="pk" value="{{ course.pk }}">
+                  <button type="submit" class = "btn btn-danger buttonShoppingCartandBrowseCourses">Drop Course
+                    <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                      </svg>
+                  </button>
+                </form>
+              </td>
+              {% else %}
+              <form method="POST" action="{% url 'addToSchedule' course.pk%}">
+                {% csrf_token %}
+                <input type="hidden" name="pk" value="{{ course.pk }}">
+                <button type="submit" class = "btn btn-success buttonShoppingCartandBrowseCourses">Add Course
+                  <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                  </svg>
+                </button>
+              </form>
+            </td>
+            {% endif %}
+        </tr>
+      </tbody>
+    {% endfor %}
+    </table>
+    {% endif %}
+  </div>
+</body>
+{% endblock %}
+</html>

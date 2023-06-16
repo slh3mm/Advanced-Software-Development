@@ -1,0 +1,146 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap" rel="stylesheet">
+<title>Advisor Home</title>
+<link rel="icon" href="{% static 'myapp/University_of_Virginia_Rotunda_logo.svg' %}">
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+
+<header>
+  <nav id = "wholeNavBar" class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a href="/"><img id = "rontundaImage" class = "image" src ="https://upload.wikimedia.org/wikipedia/commons/d/dd/University_of_Virginia_Rotunda_logo.svg"></a>
+
+        <a id="navLogo" class="navbar-brand" style = "font-family: Montserrat;
+        color: black; font-size: 30px; padding-left: 5px;" href="/accounts/profile">Schedule Advisor</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="offcanvasNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex = "-1" id="navbarSupportedContent" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header" style = "text-align: center">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel" style = "font-family: Merriweather;">Navigation Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class = "offcanvas-body"> 
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class = "nav-item"> 
+                {% if user.is_authenticated %}
+                <form action="/accounts/logout">
+                  <button class ="btn" style="background-color: #1e6db3; color: whitesmoke; margin-top: 4px;">Log Out</button>
+                </form>
+                {% else %}
+                <form action="/accounts/login">
+                  <button class ="btn" style="background-color: #1e6db3; color: whitesmoke; margin-top: 4px;">Log In</button>
+                </form>
+                  {% endif %}
+              </li>
+          </div>
+                <!--
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+            </li>
+            -->
+          </ul>
+        </div>
+      </div>
+    </nav>
+</header>
+
+<!--
+<div class = "containerCenter">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Schedule Advisor</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/polls">Polls <span class="sr-only"></span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/polls/comments/list">Comments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/polls/comments/">Create Comment</a>
+          </li>
+      </ul>
+    </div>
+  </nav>
+  -->
+  {% load static%}
+
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Montserrat:wght@200&family=Roboto:ital,wght@1,300&family=Sacramento&display=swap">
+  <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+  <style>
+    *{
+      font-weight: bolder !important;
+      font-family: 'Montserrat';
+      font-display: swap;
+      src: url(https://fonts.gstatic.com/s/montserrat/v25/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCvr6Hw3aXpsog.woff2) format('woff2');
+    }
+    .alert-messages {
+      font-weight: bolder !important;
+    }
+  </style>
+</head>
+  <body class = "bannerWhiteGradient" style = "text-align: center;">
+    <div id ="SignedInScreenInnerContainer" class = "container">
+        <h1>Schedule Requests:</h1>
+        <hr>
+        {% if schedules|length == 0 %}
+          <h4 style="font-weight: bold;">There are no pending schedules</h4>
+        {% else %}
+        {% for schedule in schedules %}
+            <br>
+            <div>
+                <h3>{{schedule.author}}</h3>
+                <!--https://docs.djangoproject.com/en/4.1/ref/templates/language/ -->
+                {% for course in schedule.courses.all %}
+                    <p>{{course.course_subject}}</p>
+                {% endfor %}
+                <form method="POST" action="{% url 'approveSchedule' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="scheduleID" value="{{schedule.id}}">
+                  <button type="submit" name = "approved" class = "btn btn-success buttonShoppingCartandBrowseCourses"> <strong>Approve</strong>
+                    <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                      </svg>
+                  </button>
+                  <button type="submit" name = "rejected" class = "btn btn-danger buttonShoppingCartandBrowseCourses"> <strong>Reject</strong>
+                    <svg xmlns="https://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                  </button>
+                </form>
+            </div>
+            <hr>
+            <br>
+        {% endfor%}
+        {% endif %}
+    </div>
+  </body>
+
+ 
+  <p class = "footer"></p>
